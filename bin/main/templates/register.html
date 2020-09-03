@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>访问者注册</title>
+<meta name="keywords" content="访问者注册" />
+<meta name="description" content="访问者注册" />
+
+<link rel="stylesheet" type="text/css" href="social/vendor/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="social/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="social/fonts/iconic/css/material-design-iconic-font.min.css">
+<link rel="stylesheet" type="text/css" href="social/css/util.css">
+<link rel="stylesheet" type="text/css" href="social/css/main.css">
+</head>
+
+<body>
+
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('statics/images/22.jpg');">
+			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+				<form id="form_register" th:action="@{~/addVisitor}" class="login100-form validate-form">
+					<span class="login100-form-title p-b-49">注册</span>
+
+					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入电话号码">
+						<span class="label-input100">电话号码</span>
+						<input id="input_username" class="input100" type="text" name="username" placeholder="请输入电话号码" autocomplete="off">
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
+					</div>
+					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入密码">
+						<span class="label-input100">密码</span>
+						<input id="input_password" class="input100" type="password" name="password" placeholder="请输入密码">
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
+					</div>
+					<div class="wrap-input100 validate-input m-b-23" data-validate="请再次输入密码">
+						<span class="label-input100">确认密码</span>
+						<input id="input_rePassword" class="input100" type="password" placeholder="请再次输入密码">
+						<span class="focus-input100" data-symbol="&#xf191;"></span>
+					</div>
+					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入验证码">
+						<span class="label-input100">验证码</span>
+						<input id="input_validateCode" class="input100" type="password" name="validateCode" placeholder="请输入验证码">
+						<span class="focus-input100" data-symbol="&#xf120;"></span>
+					</div>
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button type="button" onclick="checkAll()" class="login100-form-btn">注 册</button>
+						</div>
+					</div>
+					<div class="txt1 text-center p-t-20 p-b-10" style="color: red" id="div_error_username">错误信息username</div>
+					<div class="txt1 text-center p-t-20 p-b-10" style="color: red" id="div_error_password">错误信息password</div>
+					<div class="txt1 text-center p-t-20 p-b-10" style="color: red" id="div_error_validateCode">错误信息validateCode</div>
+
+					<div class="txt1 text-center p-t-54 p-b-20">
+						<span>第三方登录</span>
+					</div>
+
+					<div class="flex-c-m">
+						<a href="/qqLogin/weixin" class="login100-social-item bg1">
+							<i class="fa fa-wechat"></i>
+						</a>
+
+						<a href="/qqLogin/callback.do" class="login100-social-item bg2">
+							<i class="fa fa-qq"></i>
+						</a>
+
+						<a href="#" class="login100-social-item bg3">
+							<i class="fa fa-weibo"></i>
+						</a>
+					</div>
+					<div class="txt1 text-center p-t-10 p-b-20">
+						<span><a th:href="@{~/visitorLogin}">去登录</a></span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script src="social/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="social/js/main.js"></script>
+	<script src="layer/layer.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+	
+	$("#div_error_username").hide();
+	$("#div_error_password").hide();
+	$("#div_error_validateCode").hide();
+		//用户名离焦
+		$("#input_username").blur(function() {
+			if(/^1(3|4|5|7|8)\d{9}$/.test($("#input_username").val())){
+				//发送短信
+				var telephone = $("#input_username").val();
+				$.post(
+					[[@{~/sendSMS}]],
+					{"telephone":telephone},
+					function(data){
+						if(data=="false"){
+							$("#div_error_username").html("电话号码已存在，请重新输入！！");
+							$("#div_error_username").show();
+						}else{
+							$("#div_error_username").hide();
+							layer.msg("验证码已发送，请注意查收！");
+						}
+					}
+				)
+			}else{
+				$("#div_error_username").html("电话号码输入不正确，请重新输入！！");
+				$("#div_error_username").show();
+				layer.msg("电话号码输入不正确,请重新输入！！");
+			}
+		});
+		//确认密码离焦
+		$("#input_rePassword").blur(function() {
+			if($("#input_rePassword").val()!=$("#input_password").val()){
+				$("#div_error_password").html("两次输入密码不一致，请重新输入！！");
+				$("#div_error_password").show();
+			}else{
+				$("#div_error_password").hide();
+			}
+		});
+		//验证码离焦
+		$("#input_validateCode").blur(function() {
+			var validateCode = $("#input_validateCode").val()
+			$.post(
+				[[@{~/judgeValidateCode}]],
+				{"validateCode":validateCode},
+				function(data){
+					if(data=="false"){
+						$("#div_error_validateCode").html("验证码不正确，请重新输入！！");
+						$("#div_error_validateCode").show();
+					}else{
+						$("#div_error_validateCode").hide();
+					}
+				}
+			)
+		});
+		//验证全部
+		function checkAll(){
+			$("#input_rePassword").blur();
+			$("#input_validateCode").blur();
+			if($("#div_error_username").is(":hidden") & $("#div_error_password").is(":hidden") & $("#div_error_validateCode").is(":hidden") ){
+				$("#form_register").submit();
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Virtue的博客</title>
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" type="text/css" href="statics/css/index.css" media="all" />
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+</head>
+
+<body class="home blog custom-background round-avatars">
+
+	<div class="Yarn_Background" style="background-image: url( statics/images/23.jpg);"></div>
+	<div th:replace="~{fragments/header::header}"></div>
+	<div id="main" class="content">
+		<div class="container">
+			<section class="post_content" itemscope itemtype="http://schema.org/Article">
+				<header class="post_header">
+					<h1 class="post_title">归档</h1>
+				</header>
+				<div class="post-Archive">
+					<div id="archives">
+						<div class='archive-title' id='arti-2016-8' th:each="time:${timeLine}" >
+							<h3 th:text="${time}">2016-8</h3>
+							<!-- timelineObject yyyy-MM-dd -->
+							<div class='archives archives-8' data-date='2016-8'>
+								<div class="brick"  th:each="object:${timeLineObjectList}" th:if="${#strings.substring(object.createTime,0,7) eq time} ">
+									<a th:href="${object.href}">
+										<span class="time" th:text="${#strings.substring(object.createTime,5,10)}">8-15</span>
+										<span th:text="|${object.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|">世界，您好！</span>
+										<span th:text="|(&nbsp;&nbsp;&nbsp;${object.number}&nbsp;&nbsp;&nbsp;)|">(10)</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+			</section>
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/footer::footer}"></div>
+	<script type='text/javascript' src='statics/js/jquery.min.js'></script>
+	<script type='text/javascript' src='statics/js/plugins.js'></script>
+	<script type='text/javascript' src='statics/js/script.js'></script>
+	<script type='text/javascript' src='statics/js/particles.js'></script>
+	<script type='text/javascript' src='statics/js/aos.js'></script>
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>Virtue的博客</title>
+<link rel="stylesheet" type="text/css" href="statics/css/index.css" media="all" />
+<link rel="stylesheet" type="text/css" href="statics/css/mycss.css" media="all" />
+<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+<!-- 标签 -->
+<script type="text/javascript" src="statics/js/tagcloud.js"></script>
+
+
+<!--input-->
+<script type="text/javascript" src="statics/js/classie.js"></script>
+<link rel="stylesheet" type="text/css" href="statics/css/component.css" />
+
+
+
+<style>
+</style>
+
+</head>
+<body class="home blog custom-background round-avatars">
+	<div class="Yarn_Background" style="background-image: url( statics/images/14.jpg);"></div>
+	<div th:replace="~{fragments/header::header}"></div>
+	<div id="main" class="content">
+		<div class="container">
+			<section class="post_content">
+
+
+
+
+				<hr style="position: relative; top: -189px">
+				<div class="post post-layout-list" data-aos="fade-up" style="top:-189px">
+					<br>
+					<header class="post_header">
+						<p class="status_btn" style="font-size: xx-large; color: #918f90;">我的相册</p>
+					</header>
+					<br>
+				</div>
+
+
+				<div class="post post-layout-list js-gallery" data-aos="fade-up" th:each="ablum:${ablumList}" style="top:-189px">
+					<div class="post-album">
+						<div class="row content">
+							<div class="bg" th:style="'background-image: url(upload/ablumCover/'+${ablum.cover}+');'"></div>
+							<div class="contentext flex-xs-middle">
+								<div class="album-title">
+									<a href="javascript:;" th:onclick="|openImageFile(${ablum.id})|" th:text="${ablum.title}">重构图像样式测试</a>
+								</div>
+								<h5 class="review-item-creator">
+									<b>发布日期：</b>
+									<span th:text="${ablum.createTime}">2017-11-13</span>
+								</h5>
+								<div class="album-content" th:text="${ablum.content}" style="width: 460px;height:90px;overflow: hidden;text-overflow: ellipsis;white-space: normal;">如眼所见是一个图像样式，必须写五十左右的文字作为这个文本框的空白填充，不写也是可以的，强迫症不能容忍空白。</div>
+							</div>
+							<div class="album-thumb-width flex-xs-middle">
+								<div class="row album-thumb no-gutter">
+									<!-- 长宽比例一致 -->
+									<div class="col-xs-4" th:each="image,index:${ablum.images}" th:if="${index.index} le 5">
+										<img class="thumb" th:if="${index.index} le 4" th:src="|upload/ablum${ablum.id}/${image.image}|" />
+										<div th:if="${index.index} eq 5">
+											<a href="" th:text="|${ablum.imageNumber}PICS|">5 pics</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<form id="form_uploadAblumImage" th:action="@{~/uploadAblumImage}" method="post" enctype="multipart/form-data">
+				<input id="input_ablumId" type="hidden" name="ablumId" />
+				<input id="input_file" type="file" name="files" hidden="hidden" multiple="multiple" />
+			</form>
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/footer::footer}"></div>
+	<script type='text/javascript' src='statics/js/jquery.min.js'></script>
+	<script type='text/javascript' src='statics/js/plugins.js'></script>
+	<script type='text/javascript' src='statics/js/script.js'></script>
+	<script type='text/javascript' src='statics/js/particles.js'></script>
+	<script type='text/javascript' src='statics/js/aos.js'></script>
+	<script src="layer/layer.js"></script>
+	<script type="text/javascript" th:inline="javascript">
+		//打开添加文件弹出层
+		function openImageFile(id){
+			$("#input_ablumId").val(id);
+			$("#input_file").click();
+		}
+		//上传图片
+		$("#input_file").change(function(){
+			var formData= new FormData($("#form_uploadAblumImage")[0]);
+			
+			$.ajax({
+				type:"POST",
+				url:[[@{~/uploadAblumImage}]],
+				data:formData,
+				async:false,
+				cache:false,
+				processData:false,
+				dataType:false,
+				contentType:false,
+				success:function(data){
+					window.parent.location.reload();
+				}
+			})
+		});
+	</script>
+	<!-- button样式 -->
+	<script>
+		$(".button_su_inner").mouseenter(function(e) {
+			var parentOffset = $(this).offset();
+
+			var relX = e.pageX - parentOffset.left;
+			var relY = e.pageY - parentOffset.top;
+			$(this).prev(".su_button_circle").css({
+				"left" : relX,
+				"top" : relY
+			});
+			$(this).prev(".su_button_circle").removeClass("desplode-circle");
+			$(this).prev(".su_button_circle").addClass("explode-circle");
+
+		});
+
+		$(".button_su_inner").mouseleave(function(e) {
+
+			var parentOffset = $(this).offset();
+
+			var relX = e.pageX - parentOffset.left;
+			var relY = e.pageY - parentOffset.top;
+			$(this).prev(".su_button_circle").css({
+				"left" : relX,
+				"top" : relY
+			});
+			$(this).prev(".su_button_circle").removeClass("explode-circle");
+			$(this).prev(".su_button_circle").addClass("desplode-circle");
+
+		});
+	</script>
+
+	<!-- 标签 -->
+	<script type="text/javascript">
+		/*3D标签云*/
+		tagcloud({
+			selector : ".tagcloud", //元素选择器
+			fontsize : 16, //基本字体大小, 单位px
+			radius : 100, //滚动半径, 单位px
+			mspeed : "normal", //滚动最大速度, 取值: slow, normal(默认), fast
+			ispeed : "normal", //滚动初速度, 取值: slow, normal(默认), fast
+			direction : 135, //初始滚动方向, 取值角度(顺时针360): 0对应top, 90对应left, 135对应right-bottom(默认)...
+			keep : false
+		//鼠标移出组件后是否继续随鼠标滚动, 取值: false, true(默认) 对应 减速至初速度滚动, 随鼠标滚动
+		});
+	</script>
+
+	<!-- input -->
+	<script type="text/javascript">
+		(function() {
+			// trim polyfill : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+			if (!String.prototype.trim) {
+				(function() {
+					// Make sure we trim BOM and NBSP
+					var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+					String.prototype.trim = function() {
+						return this.replace(rtrim, '');
+					};
+				})();
+			}
+
+			[].slice.call(document.querySelectorAll('input.input__field'))
+					.forEach(function(inputEl) {
+						// in case the input is already filled..
+						if (inputEl.value.trim() !== '') {
+							classie.add(inputEl.parentNode, 'input--filled');
+						}
+
+						// events:
+						inputEl.addEventListener('focus', onInputFocus);
+						inputEl.addEventListener('blur', onInputBlur);
+					});
+
+			function onInputFocus(ev) {
+				classie.add(ev.target.parentNode, 'input--filled');
+			}
+
+			function onInputBlur(ev) {
+				if (ev.target.value.trim() === '') {
+					classie.remove(ev.target.parentNode, 'input--filled');
+				}
+			}
+		})();
+	</script>
+
+	<!-- button click效果 -->
+	<script>
+		var animateButton = function(e) {
+
+			e.preventDefault;
+			//reset animation
+			e.target.classList.remove('animate');
+
+			e.target.classList.add('animate');
+			setTimeout(function() {
+				e.target.classList.remove('animate');
+			}, 700);
+		};
+
+		var classname = document.getElementsByClassName("bubbly-button");
+
+		for (var i = 0; i < classname.length; i++) {
+			classname[i].addEventListener('click', animateButton, false);
+		}
+	</script>
+</body>
+</html>

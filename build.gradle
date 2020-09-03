@@ -1,0 +1,73 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.sikiedu'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+ext {
+	springCloudVersion = 'Greenwich.M1'
+}
+
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-data-elasticsearch')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('org.springframework.boot:spring-boot-starter-security')
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+	implementation('org.springframework.boot:spring-boot-starter-web')
+	implementation('org.springframework.cloud:spring-cloud-starter-oauth2')
+	
+	
+	//Social
+	implementation('org.springframework.social:spring-social-core:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-web:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-security:1.1.6.RELEASE')
+	implementation('org.springframework.social:spring-social-config:1.1.6.RELEASE')
+			
+	//Security
+	implementation('org.springframework.security:spring-security-taglibs:5.1.1.RELEASE')	
+	implementation('org.apache.tomcat.embed:tomcat-embed-jasper:8.5.32')	
+	implementation('javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1')	
+	
+	
+	
+	implementation('org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE')
+	
+	
+	implementation('org.springframework.session:spring-session-core')
+	runtimeOnly('com.h2database:h2')
+	runtimeOnly('mysql:mysql-connector-java')
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.security:spring-security-test')
+	//junit
+	testCompile 'junit:junit:4.12'
+}
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+

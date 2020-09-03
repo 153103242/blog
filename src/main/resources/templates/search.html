@@ -1,0 +1,116 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Virtue的博客</title>
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" type="text/css" href="statics/css/index.css" media="all" />
+</head>
+
+<body class="home blog custom-background round-avatars">
+	<div class="Yarn_Background" style="background-image: url( statics/images/2.png);"></div>
+	<div th:replace="~{fragments/header::header}"></div>
+	<div id="main" class="content">
+
+		<div class="container">
+
+			<h1 class="page-title">
+				以&ldquo;
+				<span th:text="${keyword}">交代</span>
+				&rdquo;为关键字
+			</h1>
+
+
+
+			<div class="location">
+				当前位置：
+				<a th:if="${type} eq shouye" th:href="@{~/}">首页</a>
+				<a th:if="${type} eq ablum" th:href="@{~/findAblum}">相册</a>
+				<a th:if="${type} eq blog" th:href="@{~/findBlog}">博客</a>
+				&raquo; 搜索结果 &raquo;
+				<span th:text="${keyword}">交代</span>
+			</div>
+
+			<div class="posts-list js-posts">
+				<p class="Searchmeta">
+					共计
+					<span th:text="${#lists.size(blogList)}">1</span>
+					篇博客
+				</p>
+				<div class="archive-post" th:each="blog:${blogList}">
+
+					<div class="type">
+						<div class="mask">
+							<i class="iconfont">&#xe603;</i>
+						</div>
+					</div>
+
+					<h2 class="archive-title" style="color: #">
+
+						<span>
+
+							<a th:href="|@{~/blogDetail}?id=${blog.id}|" th:text="${blog.title}">交代是不可能交代的</a>
+
+						</span>
+
+						<div class="post-time" th:text="${blog.createTime}">2018/03/20</div>
+
+					</h2>
+
+					<div class="post-category">
+						<a th:href="|@{~/searchCatalog}?id=${catalog.id}|" rel="category tag" th:each="catalog:${blog.catalogs}" th:text="${catalog.catalog}">Happen</a>
+					</div>
+				</div>
+				<br/>
+				<p class="Searchmeta">
+					共计
+					<span th:text="${#lists.size(ablumList)}">1</span>
+					篇相册
+				</p>
+				<div class="archive-post" th:each="ablum:${ablumList}">
+
+					<div class="type">
+						<div class="mask">
+							<i class="iconfont">&#xe603;</i>
+						</div>
+					</div>
+
+					<h2 class="archive-title" style="color: #">
+
+						<span>
+
+							<a th:href="|@{~/ablumDetail}?id=${ablum.id}|" th:text="${ablum.title}">交代是不可能交代的</a>
+
+						</span>
+
+						<div class="post-time" th:text="${ablum.createTime}">2018/03/20</div>
+
+					</h2>
+
+					<div class="post-category">
+						<a href="#" rel="category tag" th:text="${ablum.imageNumber}">Happen</a>
+					</div>
+				</div>
+			</div>
+			<div class="mt+">
+				<div class="pagination js-pagination">
+
+					<div class="js-next pagination__load"></div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div th:replace="~{fragments/footer::footer}"></div>
+	<script type='text/javascript' src='statics/js/jquery.min.js'></script>
+	<script type='text/javascript' src='statics/js/plugins.js'></script>
+	<script type='text/javascript' src='statics/js/script.js'></script>
+	<script type='text/javascript' src='statics/js/particles.js'></script>
+	<script type='text/javascript' src='statics/js/aos.js'></script>
+</body>
+
+</html>
